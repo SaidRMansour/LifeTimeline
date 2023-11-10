@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Front page";
+}
+
+<div class="text-center">
+
+
+    <form method="get" action="/UI/Hello">
+        <h2 for="birthday">Enter your birthdate:</h2>
+        <br />
+        <input type="date" id="birthday" name="birthday" required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
+        <br />
+        <br />
+        <button type="submit">Submit</button>
+    </form>
+</div>
