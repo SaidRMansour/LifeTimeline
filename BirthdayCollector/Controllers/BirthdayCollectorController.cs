@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SharedModels;
+using Monitoring;
 
 namespace BirthdayCollector.Controllers;
 
@@ -18,13 +19,19 @@ public class BirthdayCollectorController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult Get([FromQuery] DateTime birthday)
+    public IActionResult Get([FromQuery] string birthday)
     {
+        if (!DateTime.TryParse(birthday, out DateTime parsedBirthday))
+        {
+            MonitorService.Log.Here().Error("Birthday could not be parsed to a Datetime: {Birthdate}", birthday);
+            return BadRequest("Invalid date format. Please use YYYY-MM-DD format.");
+        }
+        MonitorService.Log.Here().Debug("Birthday given: {Birthdate}", birthday);
         var today = DateTime.Today;
-        var age = today.Year - birthday.Year;
+        var age = today.Year - parsedBirthday.Year;
 
         // Check if the current year's birthday has passed; if not, subtract one from age
-        if (birthday > today.AddYears(-age)) age--;
+        if (parsedBirthday > today.AddYears(-age)) age--;
 
         return Ok(age);
     }
@@ -35,8 +42,11 @@ public class BirthdayCollectorController : ControllerBase
         // Validate year input
         if (year < 1000 || year > 9999)
         {
+            MonitorService.Log.Here().Error("Invalid year input: {Year}. Year must be a 4-digit number.", year);
             return BadRequest("Year must be a 4-digit number.");
         }
+
+        MonitorService.Log.Here().Debug("Fetching historical events for year: {Year}", year);
 
         var client = _clientFactory.CreateClient("MyClient");
 
@@ -45,15 +55,17 @@ public class BirthdayCollectorController : ControllerBase
 
         if (!response.IsSuccessStatusCode)
         {
-            // Handle the error, log it, and/or return an appropriate response
+            MonitorService.Log.Here().Warning("Failed to retrieve data for year {Year}. Status: {StatusCode}, Reason: {Reason}", year, response.StatusCode, response.ReasonPhrase);
             return StatusCode((int)response.StatusCode, $"Error retrieving data: {response.ReasonPhrase}");
         }
 
-        // Deserialiser JSON to a list of HistoricalEvent-objects
         var result = await response.Content.ReadAsStringAsync();
         var historicalEvents = JsonConvert.DeserializeObject<List<HistoricalEvent>>(result);
 
+        MonitorService.Log.Here().Information("Successfully retrieved historical events for year {Year}", year);
+
         return Ok(historicalEvents);
     }
+
 }
 
