@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 25.0.1706.5
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BirthdayCollector", "BirthdayCollector\BirthdayCollector.csproj", "{D20EE663-8C10-49B5-A3FB-AC361802FAF2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D20EE663-8C10-49B5-A3FB-AC361802FAF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D20EE663-8C10-49B5-A3FB-AC361802FAF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D20EE663-8C10-49B5-A3FB-AC361802FAF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D20EE663-8C10-49B5-A3FB-AC361802FAF2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {943379D9-767A-470B-A34E-E4197A4A0F05}
+	EndGlobalSection
+EndGlobal
