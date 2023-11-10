@@ -1,6 +1,17 @@
 version: '3.4'
 
 services:
+  web-ui:
+    build:
+      context: .
+      dockerfile: UI/Dockerfile
+    depends_on:
+      - yearinhistory
+      - birthdaycollector
+    ports:
+      - "8000:80"
+    restart: on-failure
+
   yearinhistory:
     build:
       context: .
@@ -15,4 +26,9 @@ services:
       dockerfile: BirthdayCollector/Dockerfile
     deploy:
       replicas: 2
+    ports:
+      - "80"
     restart: on-failure
+
+  
+
