@@ -50,7 +50,7 @@ public class BirthdayCollectorController : ControllerBase
 
         var client = _clientFactory.CreateClient("MyClient");
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"http://year-in-history-service/YearInHistory?{year}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"http://yearinhistory/YearInHistory?{year}");
         var response = await client.SendAsync(request);
 
         if (!response.IsSuccessStatusCode)

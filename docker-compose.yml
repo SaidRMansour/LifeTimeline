@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  yearinhistory:
+    build:
+      context: .
+      dockerfile: YearInHistory/Dockerfile
+    deploy:
+      replicas: 2
+    restart: on-failure
+
+  birthdaycollector:
+    build:
+      context: .
+      dockerfile: BirthdayCollector/Dockerfile
+    deploy:
+      replicas: 2
+    restart: on-failure
