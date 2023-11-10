@@ -15,6 +15,7 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
+        var helleo =  "hello world";
         return View();
     }
 
