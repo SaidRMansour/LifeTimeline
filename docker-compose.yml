@@ -13,6 +13,7 @@ services:
       - "8000:80"
     image: saidmansour/lifetime-web-ui:$BUILD_NUMBER
     restart: on-failure
+    
 
   yearinhistory-service:
     build:
