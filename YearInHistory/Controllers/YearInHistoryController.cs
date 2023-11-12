@@ -1,56 +1,64 @@
-﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using Monitoring;
-using OpenTelemetry;
-using OpenTelemetry.Context.Propagation;
+﻿    using System.Diagnostics;
+    using Microsoft.AspNetCore.Mvc;
+    using Monitoring;
+    using OpenTelemetry;
+    using OpenTelemetry.Context.Propagation;
 
-namespace YearInHistory.Controllers;
+    namespace YearInHistory.Controllers;
 
-[ApiController]
-[Route("[controller]")]
-public class YearInHistoryController : ControllerBase
-{
-    private readonly IHttpClientFactory _clientFactory;
-
-    public YearInHistoryController(IHttpClientFactory clientFactory)
+    [ApiController]
+    [Route("[controller]")]
+    public class YearInHistoryController : ControllerBase
     {
-        _clientFactory = clientFactory;
-    }
+        private readonly IHttpClientFactory _clientFactory;
 
-    [HttpGet]
-    public async Task<IActionResult> GetAsync([FromQuery] int year)
-    {
-        MonitorService.Log.Here().Debug("Starting to fetch historical events for year: {Year}", year);
-        // Extract telemetry context from the incoming request.
-        var propagator = new TraceContextPropagator();
-        var contextToInject = HttpContext.Request.Headers;
-        var parentContext = propagator.Extract(default, contextToInject, (headers, key) =>
+        public YearInHistoryController(IHttpClientFactory clientFactory)
         {
-            return headers.ContainsKey(key) ? new List<string> { headers[key].ToString() } : new List<string>();
-        });
+            _clientFactory = clientFactory;
 
-        Baggage.Current = parentContext.Baggage;
-
-        using (var activity = MonitorService.ActivitySource.StartActivity("Get Add service received", ActivityKind.Consumer, parentContext.ActivityContext))
-        {
-            var client = _clientFactory.CreateClient("MyClient");
-            var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.api-ninjas.com/v1/historicalevents?year={year}");
-            request.Headers.Add("X-Api-Key", "dhpBPfwR/DIxXZ71rGxg+w==0igua2G0cL21Hexh");
-
-            var response = await client.SendAsync(request);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                MonitorService.Log.Here().Warning("Failed to fetch data for year {Year}. Status: {StatusCode}, Reason: {Reason}", year, response.StatusCode, response.ReasonPhrase);
-                return StatusCode((int)response.StatusCode, $"Error retrieving data: {response.ReasonPhrase}");
-            }
-
-            var responseContent = await response.Content.ReadAsStringAsync();
-            MonitorService.Log.Here().Information("Successfully fetched historical events for year {Year}", year);
-
-            return Ok(responseContent);
         }
-    }
 
-}
+        [HttpGet]
+        public async Task<IActionResult> GetAsync([FromQuery] string year)
+        {
+            // Extract telemetry context from the incoming request.
+            var propagator = new TraceContextPropagator();
+            var contextToInject = HttpContext.Request.Headers;
+            var parentContext = propagator.Extract(default, contextToInject, (headers, key) =>
+            {
+                return headers.ContainsKey(key) ? new List<string> { headers[key].ToString() } : new List<string>();
+            });
+
+            Baggage.Current = parentContext.Baggage;
+
+            using (var activity = MonitorService.ActivitySource.StartActivity("Get Event service received", ActivityKind.Consumer, parentContext.ActivityContext))
+            {
+
+                // Validate year input.
+                if (!int.TryParse(year, out int parsedYear) || parsedYear < 1000 || parsedYear > 9999)
+                {
+                    MonitorService.Log.Here().Error("Invalid year input: {Year}. Year must be a 4-digit number.", year);
+                    return BadRequest("Year must be a 4-digit number.");
+                }
+                // Create a new client and send a request to the external historical events API.
+                var client = _clientFactory.CreateClient("MyClient");
+                var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.api-ninjas.com/v1/historicalevents?year={year}");
+                request.Headers.Add("X-Api-Key", "dhpBPfwR/DIxXZ71rGxg+w==0igua2G0cL21Hexh");
+
+                var response = await client.SendAsync(request);
+
+                // Check if the response is successful.
+                if (!response.IsSuccessStatusCode)
+                {
+                    MonitorService.Log.Here().Warning("Failed to fetch data for year {Year}. Status: {StatusCode}, Reason: {ReasonPhrase}.", year, response.StatusCode, response.ReasonPhrase);
+                    return StatusCode((int)response.StatusCode, $"Error retrieving data: {response.ReasonPhrase}");
+                }
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                // Returns the raw response content; consider deserializing it if necessary for further processing.
+                return Ok(responseContent);
+            }
+        }
+
+    }
 

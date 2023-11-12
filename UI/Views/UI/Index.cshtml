@@ -20,7 +20,14 @@
     }
     @if (ViewBag.Result != null)
     {
-        <p>Age: @ViewBag.Result</p>
+        if (int.TryParse(ViewBag.Result.ToString(), out int age))
+        {
+            <p>Age: @age</p>
+        }
+        else
+        {
+            <p style="color:red">@ViewBag.Result</p> <!-- Or handle the non-integer case differently if needed -->
+        }
     }
 
     @if (ViewBag.HistoryEvent != null && ViewBag.HistoryEvent.Count > 0)
@@ -31,7 +38,7 @@
                     <th>Year</th>
                     <th>Month</th>
                     <th>Day</th>
-                    <th>Event</th>
+                    <th style="text-align: left">Event</th>
                 </tr>
             </thead>
             <tbody>
@@ -41,16 +48,12 @@
                         <td>@evt.Year</td>
                         <td>@evt.Month</td>
                         <td>@evt.Day</td>
-                        <td>@evt.Event</td>
+                        <td style="text-align: left">@evt.Event</td>
                     </tr>
                 }
             </tbody>
         </table>
-    }
-    else
-    {
-        <p>Nothing found in this year.</p>
-    }
 
-
+        <button type="button" onclick="location.href='@Url.Action("Index", "UI")'">Reset</button>
+    }
 </div>

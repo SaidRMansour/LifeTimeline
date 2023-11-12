@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <DockerComposeProjectPath>../LifeTimeline/docker-compose.dcproj</DockerComposeProjectPath>
+    <UserSecretsId>41ca0825-775a-4000-b779-7e5a189023d1</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
@@ -12,9 +13,13 @@
     <ProjectReference Include="..\Monitoring\Monitoring.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
+    <ProjectReference Include="..\SharedModels\SharedModels.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Polly" Version="8.1.0" />
     <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="7.0.13" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 </Project>
