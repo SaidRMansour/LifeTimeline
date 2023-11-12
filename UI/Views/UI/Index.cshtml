@@ -5,7 +5,7 @@
 <div class="text-center">
 
 
-    <form method="get" action="/UI/Hello">
+    <form method="post" action="/UI/GetBirthday">
         <h2 for="birthday">Enter your birthdate:</h2>
         <br />
         <input type="date" id="birthday" name="birthday" required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
@@ -13,4 +13,44 @@
         <br />
         <button type="submit">Save</button>
     </form>
+
+    @if (ViewBag.Error != null)
+    {
+        <p>@ViewBag.Error</p>
+    }
+    @if (ViewBag.Result != null)
+    {
+        <p>Age: @ViewBag.Result</p>
+    }
+
+    @if (ViewBag.HistoryEvent != null && ViewBag.HistoryEvent.Count > 0)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Year</th>
+                    <th>Month</th>
+                    <th>Day</th>
+                    <th>Event</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var evt in ViewBag.HistoryEvent)
+                {
+                    <tr>
+                        <td>@evt.Year</td>
+                        <td>@evt.Month</td>
+                        <td>@evt.Day</td>
+                        <td>@evt.Event</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Nothing found in this year.</p>
+    }
+
+
 </div>

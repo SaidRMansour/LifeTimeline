@@ -22,7 +22,7 @@ public class BirthdayCollectorController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult Get([FromQuery] string birthday)
+    public IActionResult Get(string birthday)
     {
         // Extract telemetry context from the incoming request.
         var propagator = new TraceContextPropagator();
@@ -34,7 +34,9 @@ public class BirthdayCollectorController : ControllerBase
 
         Baggage.Current = parentContext.Baggage;
 
-        using (var activity = MonitorService.ActivitySource.StartActivity("Get Add service received", ActivityKind.Consumer, parentContext.ActivityContext))
+        MonitorService.Log.Here().Debug("We are inside the birthday service");
+
+        using (var activity = MonitorService.ActivitySource.StartActivity("Get Age method is called", ActivityKind.Consumer, parentContext.ActivityContext))
         {
             if (!DateTime.TryParse(birthday, out DateTime parsedBirthday))
             {
@@ -70,7 +72,7 @@ public class BirthdayCollectorController : ControllerBase
 
         var client = _clientFactory.CreateClient("MyClient");
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"http://yearinhistory/YearInHistory?{year}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"http://yearin-history/YearInHistory?{year}");
 
         propagator.Inject(propagationContext, request.Headers, (headers, key, value) => headers.Add(key, value));
 
