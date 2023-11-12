@@ -60,7 +60,7 @@ public class UIController : Controller
             }
             else
             {
-                MonitorService.Log.Here().Error("Hello");
+                MonitorService.Log.Here().Error("Error");
             }
 
             return View("Index");
