@@ -11,7 +11,7 @@ services:
       - zipkin
     ports:
       - "8000:80"
-    image: saidmansour/lifetime-web-ui:$BUILD_NUMBER
+    image: wehba/Ui
     restart: on-failure
     
 
@@ -21,7 +21,7 @@ services:
       dockerfile: YearInHistory/Dockerfile
     deploy:
       replicas: 2
-    image: saidmansour/lifetime-eventyear:$BUILD_NUMBER
+    image: wehba/lifetime-eventyea
     restart: on-failure
 
   birthday-service:
@@ -30,7 +30,7 @@ services:
       dockerfile: BirthdayCollector/Dockerfile
     deploy:
       replicas: 2
-    image: saidmansour/lifetime-birthday:$BUILD_NUMBER
+    image: wehba/lifetime-birthday
     restart: on-failure
     
   seq:
