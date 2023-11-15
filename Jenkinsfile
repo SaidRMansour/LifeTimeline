@@ -5,12 +5,11 @@ pipeline{
     }
     stages{
         stage('Build') {
-            steps{                     
-                    bat 'docker-compose build'     
-                    echo 'Docker-compose-build Build Image Completed'                
-                  }  
-                     }
-       /*  stage('Deliver') {
+            steps {
+                bat "/usr/local/bin/docker compose build"
+            }
+        }
+        stage('Deliver') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'wehba', passwordVariable: 'Allordone-12')]){
                     bat "/usr/local/bin/docker login -u $wehba   -p $Allordone-12"
@@ -22,6 +21,6 @@ pipeline{
             steps {
                 bat "/usr/local/bin/docker compose up --build web-ui"
             }
-        } */
+        }
     }
 }
