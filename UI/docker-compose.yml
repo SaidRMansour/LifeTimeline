@@ -11,7 +11,7 @@ services:
       - zipkin
     ports:
       - "8000:80"
-    image: .
+    image: lifetime/webUi
     restart: on-failure
     
 
@@ -21,7 +21,7 @@ services:
       dockerfile: YearInHistory/Dockerfile
     deploy:
       replicas: 2
-    image: .
+    image: lifetime/YearInHistory
     restart: on-failure
 
   birthday-service:
@@ -30,7 +30,7 @@ services:
       dockerfile: BirthdayCollector/Dockerfile
     deploy:
       replicas: 2
-    image: .
+    image: lifetime/Birthday
     restart: on-failure
     
   seq:
