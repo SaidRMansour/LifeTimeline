@@ -1,16 +1,53 @@
-pipeline{
-    agent any
-    triggers{
-        pollSCM("* * * * *")
-    }
-    stages{
-        stage('Build') {
-            steps {
-                sh "/usr/local/bin/docker compose build"
-            }
-        }
-      
 
-        
-    }
-}
+services:
+  web-ui:
+    build:
+      context: .
+      dockerfile: UI/Dockerfile
+    depends_on:
+      - birthday-service
+      - yearinhistory-service
+      - seq
+      - zipkin
+    ports:
+      - "8000:80"
+    image: saidmansour/lifetime-web-ui:$BUILD_NUMBER
+    restart: on-failure
+    
+
+  yearinhistory-service:
+    build:
+      context: .
+      dockerfile: YearInHistory/Dockerfile
+    deploy:
+      replicas: 2
+    image: saidmansour/lifetime-eventyear:$BUILD_NUMBER
+    restart: on-failure
+
+  birthday-service:
+    build:
+      context: .
+      dockerfile: BirthdayCollector/Dockerfile
+    deploy:
+      replicas: 2
+    image: saidmansour/lifetime-birthday:$BUILD_NUMBER
+    restart: on-failure
+    
+  seq:
+    image: datalust/seq
+    ports:
+     - 5341:5341
+     - 5342:80
+    volumes:
+     - rps_seq_data1:/data
+    environment:
+     - ACCEPT_EULA=Y
+
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
+      
+volumes:
+ rps_seq_data1:
+  
