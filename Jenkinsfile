@@ -6,20 +6,20 @@ pipeline{
     stages{
         stage('Build') {
             steps {
-                bat "/usr/local/bin/docker compose build"
+                bat "docker-compose build"
             }
         }
         stage('Deliver') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
-                    bat "/usr/local/bin/docker login -u $USERNAME -p $PASSWORD"
-                    bat "/usr/local/bin/docker compose push"
+                    bat "docker login -u $USERNAME -p $PASSWORD"
+                    bat "docker-compose push"
                 }
             }
         }
         stage('Deploy') {
             steps {
-                bat "/usr/local/bin/docker compose up --build web-ui"
+                bat "docker-compose up --build web-ui"
             }
         }
     }
