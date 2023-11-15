@@ -11,7 +11,7 @@ services:
       - zipkin
     ports:
       - "8000:80"
-    image: lifetimeline-web-ui
+    image: wehba/lifetimeline-web-ui
     restart: on-failure
     
 
@@ -21,7 +21,7 @@ services:
       dockerfile: YearInHistory/Dockerfile
     deploy:
       replicas: 2
-    image: lifetimeline-yearinhistory-service
+    image: wehba/lifetimeline-yearinhistory-service
     restart: on-failure
 
   birthday-service:
@@ -30,7 +30,7 @@ services:
       dockerfile: BirthdayCollector/Dockerfile
     deploy:
       replicas: 2
-    image: lifetimeline-birthday-service
+    image: wehba/lifetimeline-birthday-service
     restart: on-failure
     
   seq:
