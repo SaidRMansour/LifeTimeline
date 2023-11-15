@@ -10,7 +10,7 @@ namespace Monitoring;
 
 public class MonitorService
 {
-    public static readonly string ServiceName = Assembly.GetCallingAssembly().GetName().Name ?? "Unknown";
+    public static readonly string ServiceName = Assembly.GetEntryAssembly()?.GetName().Name ?? "Unknown";
     public static TracerProvider TracerProvider;
     public static ActivitySource ActivitySource = new ActivitySource(ServiceName);
 

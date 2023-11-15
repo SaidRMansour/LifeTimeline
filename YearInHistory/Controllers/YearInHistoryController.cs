@@ -1,10 +1,14 @@
-﻿    using System.Diagnostics;
-    using Microsoft.AspNetCore.Mvc;
-    using Monitoring;
-    using OpenTelemetry;
-    using OpenTelemetry.Context.Propagation;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using Monitoring;
+using OpenTelemetry;
+using OpenTelemetry.Context.Propagation;
+using Polly;
+using Polly.CircuitBreaker;
+using Polly.Extensions.Http;
 
-    namespace YearInHistory.Controllers;
+
+namespace YearInHistory.Controllers;
 
     [ApiController]
     [Route("[controller]")]
@@ -12,11 +16,20 @@
     {
         private readonly IHttpClientFactory _clientFactory;
 
+        // Circuit breaker
+        private static AsyncCircuitBreakerPolicy<HttpResponseMessage> circuitBreakerPolicy;
+
         public YearInHistoryController(IHttpClientFactory clientFactory)
         {
             _clientFactory = clientFactory;
-
-        }
+            circuitBreakerPolicy = HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .OrResult(msg => !msg.IsSuccessStatusCode)
+                .CircuitBreakerAsync(
+                    handledEventsAllowedBeforeBreaking: 2,
+                    durationOfBreak: TimeSpan.FromMinutes(1)
+                );
+    }
 
         [HttpGet]
         public async Task<IActionResult> GetAsync([FromQuery] string year)
@@ -45,20 +58,39 @@
                 var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.api-ninjas.com/v1/historicalevents?year={year}");
                 request.Headers.Add("X-Api-Key", "dhpBPfwR/DIxXZ71rGxg+w==0igua2G0cL21Hexh");
 
-                var response = await client.SendAsync(request);
-
-                // Check if the response is successful.
-                if (!response.IsSuccessStatusCode)
+                // NEW
+                try
                 {
-                    MonitorService.Log.Here().Warning("Failed to fetch data for year {Year}. Status: {StatusCode}, Reason: {ReasonPhrase}.", year, response.StatusCode, response.ReasonPhrase);
-                    return StatusCode((int)response.StatusCode, $"Error retrieving data: {response.ReasonPhrase}");
+                    var response = await circuitBreakerPolicy.ExecuteAsync(() =>
+                        client.SendAsync(request)
+                    );
+
+                    // Check if the response is successful.
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        MonitorService.Log.Here().Warning("Failed to fetch data for year {Year}. Status: {StatusCode}, Reason: {ReasonPhrase}.", year, response.StatusCode, response.ReasonPhrase);
+                        return StatusCode((int)response.StatusCode, $"Error retrieving data: {response.ReasonPhrase}");
+                    }
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    return Ok(responseContent);
+                }
+                catch (BrokenCircuitException)
+                {
+                    
+                    return StatusCode(503, "Service Temporarily Unavailable");
+                }
+                catch (Exception ex)
+                {
+                    
+                    return StatusCode(500, "Internal Server Error");
                 }
 
-                var responseContent = await response.Content.ReadAsStringAsync();
-                // Returns the raw response content; consider deserializing it if necessary for further processing.
-                return Ok(responseContent);
-            }
+
+
+            
         }
 
     }
+}
 
