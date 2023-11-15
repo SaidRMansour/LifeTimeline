@@ -6,14 +6,14 @@ pipeline{
     stages{
         stage('Build') {
             steps {
-                sh "/usr/local/bin/docker compose build"
+                sh "docker compose build"
             }
         }
         stage('Deliver') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'wehba', passwordVariable: 'Allordone-12')]){
-                    sh "/usr/local/bin/docker login -u $wehba -p $Allordone-12"
-                    sh "/usr/local/bin/docker compose push"
+                    sh "docker login -u $wehba -p $Allordone-12"
+                    sh "docker compose push"
                 }
             }
         }
