@@ -55,7 +55,7 @@ namespace YearInHistory.Controllers;
                 }
                 // Create a new client and send a request to the external historical events API.
                 var client = _clientFactory.CreateClient("MyClient");
-                var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.api-ninjas.com/v1/historicalevents?year={year}");
+                var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.api-ninjas.com/v1/historicalevent?year={year}");
                 request.Headers.Add("X-Api-Key", "dhpBPfwR/DIxXZ71rGxg+w==0igua2G0cL21Hexh");
 
                 // NEW
