@@ -13,13 +13,13 @@ pipeline{
             steps {
                 withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'wehba', passwordVariable: 'Allordone-12')]){
                     bat "docker login -u $wehba   -p $Allordone-12"
-                    bat "docker compose push"
+                    bat "docker-compose push"
                 }
             }
         }
         stage('Deploy') {
             steps {
-                bat "/usr/local/bin/docker compose up --build web-ui"
+                bat "docker-compose up --build web-ui"
             }
         }
     }
