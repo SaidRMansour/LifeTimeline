@@ -16,6 +16,7 @@ public class BirthdayCollectorController : ControllerBase
 {
     private readonly IHttpClientFactory _clientFactory;
 
+  
     public BirthdayCollectorController(IHttpClientFactory clientFactory)
     {
         _clientFactory = clientFactory;

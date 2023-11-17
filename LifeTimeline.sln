@@ -1,17 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 25.0.1706.5
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34302.71
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BirthdayCollector", "BirthdayCollector\BirthdayCollector.csproj", "{D20EE663-8C10-49B5-A3FB-AC361802FAF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BirthdayCollector", "BirthdayCollector\BirthdayCollector.csproj", "{D20EE663-8C10-49B5-A3FB-AC361802FAF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedModels", "SharedModels\SharedModels.csproj", "{51251EA5-C942-45F6-832D-28E1B7F227FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedModels", "SharedModels\SharedModels.csproj", "{51251EA5-C942-45F6-832D-28E1B7F227FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YearInHistory", "YearInHistory\YearInHistory.csproj", "{1AE0D6D2-42C3-4E6A-BE8D-CE627ACF1740}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YearInHistory", "YearInHistory\YearInHistory.csproj", "{1AE0D6D2-42C3-4E6A-BE8D-CE627ACF1740}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitoring", "Monitoring\Monitoring.csproj", "{1064463E-1A90-4353-8385-5D93BAEE8D22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitoring", "Monitoring\Monitoring.csproj", "{1064463E-1A90-4353-8385-5D93BAEE8D22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI", "UI\UI.csproj", "{268BCD8A-3399-47ED-9020-EFC331C5200A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI", "UI\UI.csproj", "{268BCD8A-3399-47ED-9020-EFC331C5200A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
